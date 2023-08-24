@@ -32,7 +32,7 @@ userRouter.post('/login', async (req, res) => {
             }
             else {
                 const token = jwt.sign({ userId: user._id, name: user.username }, process.env.secretKey, { expiresIn: '1d' });
-                res.status(400).send({ msg: 'User logged in successfully', token, username: user.username });
+                res.status(200).send({ msg: 'User logged in successfully', token, username: user.username });
             }
         }
     } catch (error) {
