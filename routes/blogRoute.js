@@ -6,11 +6,11 @@ const BlogModel = require('../models/blogModel');
 const blogRouter = express.Router();
 
 blogRouter.get('/blogs', auth, async (req, res) => {
-    const { title, category, sort, order } = req.query;
+    const {title, category, sort, order } = req.query;
 
     try {
         if (title) {
-            const blogs = await BlogModel.find({ title: { $regex: title, $options: 'i' } });
+            const blogs = await BlogModel.find({title : { $regex: title, $options: 'i' } });
             res.status(200).send(blogs)
         }
         else if (category) {
@@ -42,7 +42,27 @@ blogRouter.post('/blogs', auth, async(req, res) => {
         const blog = await BlogModel.create(req.body);
         res.status(200).send({msg : 'Blog posted successfully', blog});
     } catch (error) {
-        res.status(400).send({msg : error.message});
+        res.status(400).send({msg : error.message });
+    }
+})
+
+blogRouter.patch('/blogs/:id', auth, async(req, res) => {
+    const {id} = req.params;
+    try {
+        const blog = await BlogModel.findByIdAndUpdate({_id : id}, req.body, {new : true});
+        res.status(200).send({msg : 'Blog updated successfully', blog});
+    } catch (error) {
+        res.status(400).send({msg : error.message });
+    }
+})
+
+blogRouter.delete('/blogs/:id', auth, async(req, res) => {
+    const {id} = req.params;
+    try {
+        const blog = await BlogModel.findByIdAndDelete({_id : id});
+        res.status(200).send({msg : 'Blog deleted successfully', blog});
+    } catch (error) {
+        res.status(400).send({msg : error.message });
     }
 })
 
